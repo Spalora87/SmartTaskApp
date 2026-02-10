@@ -1,18 +1,33 @@
 package com.seema.smarttaskapp.data.local.task
 
+import android.util.Log
 import com.seema.smarttaskapp.domain.task.Task
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class TaskRepositoryImpl:TaskRepository{
+@Singleton
+class TaskRepositoryImpl @Inject constructor():TaskRepository{
 
-    private val tasks= mutableListOf<Task>()
+    private val tasksFlow= MutableStateFlow<List<Task>>(emptyList())
+
+    init {
+        Log.d("REPO_DEBUG", "Repository created")
+        Log.d("REPO_DEBUG", "Repository instance = ${this.hashCode()}")
+    }
     override suspend fun addTask(task: Task) {
-        delay(500)
-        tasks.add(task)
+        tasksFlow.value = tasksFlow.value + task
+        Log.d("REPO_DEBUG", "Task added: ${task.name}")
+        Log.d("REPO_DEBUG", "Total tasks: ${tasksFlow.value.size}")
     }
 
-    override suspend fun getTasks(): List<Task> {
-        return tasks
+    override fun observeTasks(): Flow<List<Task>> {
+        Log.d("REPO_DEBUG", "observeTasks called")
+
+        return tasksFlow
     }
+
 
 }

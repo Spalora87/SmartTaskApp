@@ -2,7 +2,7 @@ package com.seema.smarttaskapp.domain.task
 
 import com.seema.smarttaskapp.data.local.task.TaskRepository
 
-class AddTaskUseCase(private val repository: TaskRepository){
+class AddTasksUseCase(private val repository: TaskRepository){
 
     suspend operator fun invoke(taskName:String){
         if(taskName.isBlank()){
